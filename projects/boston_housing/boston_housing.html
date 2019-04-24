@@ -13561,8 +13561,8 @@ Standard deviation of prices: $165171.13154429474
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
-<p>Having a look to the data, without looking into the R2 score, I would say the model has successfully captured the variation of the target variable. The reason is that for each of the <code>True Value</code> item, the correspondent <code>Prediction</code> is similar accounting for a small relative error.</p>
-<p>Having a look to the R2 score, <strong>as the number is closer to 1</strong>, I would say that the model explains the variability around its mean. Hence, it successfully captures the variation of the target variable.</p>
+<p>Having a look to the data, without looking into the R2 score, I would say the model successfully captures the variation of the target variable. The reason is that for each of the <code>True Value</code> item, the correspondent <code>Prediction</code> is similar accounting for a small relative error.</p>
+<p>Having a <strong>R2 score</strong> of <strong>0.923</strong> means the current model is able to represent 92.3% of the target variance results. In general, a model fits the data if the differences between the observed values and the predictions are small. A 92% of success representing the target variable should give us enough confidence to go forward.</p>
 
 </div>
 </div>
@@ -13639,7 +13639,8 @@ Standard deviation of prices: $165171.13154429474
 <p><strong>Answer:</strong></p>
 <ul>
 <li>A dataset is split into a training and test corpus in order <strong>to measure the performance of a model objectively</strong>. Specifying a ratio ensures the volumes for training and test are proportional to each other.</li>
-<li>When evaluating a model performance, measuring over an unseen corpus is essential (test subset) in order to make sure the results are accurate, otherwise we could end up with results that are too optimistic but do not perform well with future predictions (high variance over the targeted predictions). Including the test corpus as part of the training would end up likely in overfitting.</li>
+<li>When evaluating a model performance, measuring over an unseen corpus is essential (test subset) in order to make sure the results are accurate, otherwise we could end up with results that are too optimistic but do not perform well with future predictions (high variance over the targeted predictions). </li>
+<li>Note we should not include our test corpus as part of the training (as the model will be biased towards that data). There are cases where we need to test the performance of a model while training and, in that case, we have to have in consideration a split on the training set as well accounting for validation.</li>
 </ul>
 
 </div>
@@ -13863,9 +13864,10 @@ I think <code>max_depth=3</code> would be the one that best generalizes the unse
 <ul>
 <li><strong>What is the grid search technique?</strong></li>
 </ul>
-<p>Grid search is the process of searching for the optimal parameter/s to apply given a specific dataset and model. Grid search input is normally a map of parameters specifying the values the search needs to try on the model.
-Depending on the model we are using, different parameters might need to be specified. 
-For example, for <code>DecisionTreeRegressor</code> a good parameter to perform an exhaustive search is <code>max_depth</code>.</p>
+<p>Grid search is an algorithm that helps tuning the parameters of a model. The input of the algorithm is a combination of parameters with the possible values we want to explore and a performance metric function in order to assess how well the model does. The algorithm creates a grid with all possible parameters combinations and for each of them, it applies the performance metric function in order to know how good it is.
+The output of the algorithm is the parameters with the values chosen in order to have the maximum performance score.
+The way I look at it, Grid Search is the brute force solution for finding optimal parameters (from those specified) within a model.</p>
+<p>Adjusting parameters within a model can be hard and time consuming, Grid search technique can be used to help us finding the most optimal parameters within a model. Instead of running several try and fail scenarios, we can let GridSearch generate all possible combinations and find a good solution to our problem.</p>
 
 </div>
 </div>
@@ -13892,13 +13894,22 @@ For example, for <code>DecisionTreeRegressor</code> a good parameter to perform 
 <ul>
 <li><strong>What is the k-fold cross-validation training technique?</strong></li>
 </ul>
-<p>k-fold cross validation is where a given dataset is split into a K buckets. The training technique consists on K  training iterations where k-1 buckets are used as training data and 1 bucket is used as a validation set. 
-On each iteration, the bucket used as the validation set is one that has not been used before, the rest (K-1 buckets) are used as a training.
-Cross validation refers to the fact of performing validations during our training on different data buckets.</p>
+<p>After we split our dataset into training and test, on the training part and in most cases we need to assess the performance of a model. 
+K-fold CV technique consists on:</p>
+<ul>
+<li>Separating training dataset on K folds</li>
+<li>Perform K training iterations where:<ul>
+<li>K-1 folds are used for training</li>
+<li>1 fold is used for validation</li>
+<li>Note: on each iteration a different fold is used for validation giving us observability of events over the whole training dataset</li>
+</ul>
+</li>
+<li>The average of the K iterations score will be used to check the performance of a model</li>
+</ul>
 <ul>
 <li><strong>What benefit does this technique provide for grid search when optimizing a model?</strong></li>
 </ul>
-<p>When optimizing a model, it is good to have observations to validate across the whole dataset (and not only a specific bucket of data). Using the whole dataset as a validation at some point during the training helps find the most optimal solution for unseen data.</p>
+<p>When optimizing a model, we normally have a percentage of the training data used for validation (100/K)%. This leads to use less data for training. K-fold CV solves that by running K iterations and taking the average of the score  (only concern is that you spend more computational power running K iterations). Having all the training buckets participating on the score (through the average of the k iterations) may reflect better the variance of the target variable.</p>
 
 </div>
 </div>
